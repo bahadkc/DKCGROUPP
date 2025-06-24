@@ -30,11 +30,11 @@ const SideLabel = styled.div`
   min-width: 120px;
   
   @media (max-width: 768px) {
-    min-width: 100px;
+    min-width: 80px;
   }
   
   @media (max-width: 480px) {
-    min-width: 80px;
+    min-width: 60px;
   }
 `;
 
@@ -46,28 +46,36 @@ const LabelTitle = styled.h3`
   color: rgba(255, 255, 255, 0.9);
   
   @media (max-width: 768px) {
-    font-size: 1.2rem;
-    letter-spacing: 1.5px;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    margin-bottom: 0.25rem;
   }
   
   @media (max-width: 480px) {
-    font-size: 1rem;
-    letter-spacing: 1px;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+  }
+  
+  @media (max-width: 320px) {
+    font-size: 0.8rem;
+    letter-spacing: 0.25px;
   }
 `;
 
 const SliderContainer = styled.div`
   position: relative;
-  width: 700px;
-  height: 400px;
+  width: 600px;
+  height: 350px;
   overflow: visible;
   cursor: col-resize;
   user-select: none;
   border-radius: 8px;
+  touch-action: pan-x;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   
   @media (max-width: 768px) {
-    width: 575px;
-    height: 350px;
+    width: 400px;
+    height: 240px;
     border-radius: 6px;
     cursor: grab;
     
@@ -77,31 +85,31 @@ const SliderContainer = styled.div`
   }
   
   @media (max-width: 480px) {
-    width: 350px;
-    height: 250px;
+    width: 280px;
+    height: 180px;
     border-radius: 4px;
+  }
+  
+  @media (max-width: 320px) {
+    width: 240px;
+    height: 150px;
   }
 `;
 
 const ImageWrapper = styled.div`
   position: absolute;
   top: 0;
-  left: 50px;
-  width: 600px;
+  left: 0;
+  width: 100%;
   height: 100%;
   overflow: hidden;
   border-radius: 8px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   
   @media (max-width: 768px) {
-    left: 37.5px;
-    width: 500px;
     border-radius: 6px;
   }
   
   @media (max-width: 480px) {
-    left: 25px;
-    width: 300px;
     border-radius: 4px;
   }
 `;
@@ -118,62 +126,19 @@ const BeforeImage = styled.img`
 const AfterImageContainer = styled.div<{ clipWidth: number }>`
   position: absolute;
   top: 0;
-  left: 50px;
-  width: 600px;
+  left: 0;
+  width: 100%;
   height: 100%;
   overflow: hidden;
   border-radius: 8px;
-  clip-path: inset(0 ${props => {
-    // Convert the full container percentage to image-relative percentage
-    const imageStartPercent = (50 / 700) * 100; // ~7.14%
-    const imageEndPercent = (650 / 700) * 100; // ~92.86%
-    
-    if (props.clipWidth <= imageStartPercent) {
-      return '100%';
-    } else if (props.clipWidth >= imageEndPercent) {
-      return '0%';
-    } else {
-      const imageRelativePercent = (props.clipWidth - imageStartPercent) / (imageEndPercent - imageStartPercent) * 100;
-      return (100 - imageRelativePercent) + '%';
-    }
-  }} 0 0);
+  clip-path: inset(0 ${props => (100 - props.clipWidth)}% 0 0);
   
   @media (max-width: 768px) {
-    left: 37.5px;
-    width: 500px;
     border-radius: 6px;
-    clip-path: inset(0 ${props => {
-      const imageStartPercent = (37.5 / 575) * 100;
-      const imageEndPercent = (537.5 / 575) * 100;
-      
-      if (props.clipWidth <= imageStartPercent) {
-        return '100%';
-      } else if (props.clipWidth >= imageEndPercent) {
-        return '0%';
-      } else {
-        const imageRelativePercent = (props.clipWidth - imageStartPercent) / (imageEndPercent - imageStartPercent) * 100;
-        return (100 - imageRelativePercent) + '%';
-      }
-    }} 0 0);
   }
   
   @media (max-width: 480px) {
-    left: 25px;
-    width: 300px;
     border-radius: 4px;
-    clip-path: inset(0 ${props => {
-      const imageStartPercent = (25 / 350) * 100;
-      const imageEndPercent = (325 / 350) * 100;
-      
-      if (props.clipWidth <= imageStartPercent) {
-        return '100%';
-      } else if (props.clipWidth >= imageEndPercent) {
-        return '0%';
-      } else {
-        const imageRelativePercent = (props.clipWidth - imageStartPercent) / (imageEndPercent - imageStartPercent) * 100;
-        return (100 - imageRelativePercent) + '%';
-      }
-    }} 0 0);
   }
 `;
 
@@ -201,15 +166,16 @@ const DividerLine = styled(motion.div)<{ position: number }>`
   
   @media (max-width: 768px) {
     width: 3px;
-    top: -20px;
-    height: calc(100% + 40px);
+    top: -25px;
+    height: calc(100% + 50px);
     left: calc(${props => props.position}% - 1.5px);
+    cursor: grab;
   }
   
   @media (max-width: 480px) {
     width: 2px;
-    top: -15px;
-    height: calc(100% + 30px);
+    top: -20px;
+    height: calc(100% + 40px);
     left: calc(${props => props.position}% - 1px);
   }
 `;
@@ -251,13 +217,35 @@ const DragHandle = styled(motion.div)<{ position: number }>`
   }
   
   @media (max-width: 768px) {
-    width: 35px;
-    height: 35px;
+    width: 45px;
+    height: 45px;
     cursor: grab;
+    left: calc(${props => props.position}% - 22.5px);
     
     &:active {
       cursor: grabbing;
     }
+    
+    &::before,
+    &::after {
+      width: 8px;
+      height: 8px;
+      border-width: 0 2px 2px 0;
+    }
+    
+    &::before {
+      left: 14px;
+    }
+    
+    &::after {
+      right: 14px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    width: 35px;
+    height: 35px;
+    left: calc(${props => props.position}% - 17.5px);
     
     &::before,
     &::after {
@@ -275,9 +263,10 @@ const DragHandle = styled(motion.div)<{ position: number }>`
     }
   }
   
-  @media (max-width: 480px) {
+  @media (max-width: 320px) {
     width: 30px;
     height: 30px;
+    left: calc(${props => props.position}% - 15px);
     
     &::before,
     &::after {
@@ -287,11 +276,11 @@ const DragHandle = styled(motion.div)<{ position: number }>`
     }
     
     &::before {
-      left: 9px;
+      left: 10px;
     }
     
     &::after {
-      right: 9px;
+      right: 10px;
     }
   }
 `;
@@ -309,53 +298,185 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({
   afterImage,
   beforeLabel = "Before",
   afterLabel = "After",
-  initialPosition = 50
+  initialPosition = 0
 }) => {
-  const [sliderPosition, setSliderPosition] = useState(initialPosition);
+  const [sliderPosition, setSliderPosition] = useState(0); // Start at leftmost boundary
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const handleMouseDown = useCallback(() => {
-    setIsDragging(true);
+  // Get responsive extension based on screen size
+  const getResponsiveExtension = useCallback(() => {
+    const screenWidth = window.innerWidth;
+    if (screenWidth <= 320) return 10; // Small mobile
+    if (screenWidth <= 480) return 15; // Mobile
+    if (screenWidth <= 768) return 20; // Tablet
+    return 30; // Desktop
   }, []);
+
+  // Convert gap-relative position to image-relative position for clipping
+  const getImageClipPosition = useCallback(() => {
+    if (!containerRef.current) return sliderPosition;
+    
+    const sliderWrapper = containerRef.current.parentElement;
+    if (!sliderWrapper) return sliderPosition;
+    
+    const wrapperRect = sliderWrapper.getBoundingClientRect();
+    const containerRect = containerRef.current.getBoundingClientRect();
+    
+    // Calculate boundaries
+    const imageStartX = containerRect.left - wrapperRect.left;
+    const imageEndX = containerRect.right - wrapperRect.left;
+    const imageWidth = containerRect.width;
+    const wrapperWidth = wrapperRect.width;
+    
+    // Extend boundaries by responsive amount beyond image edges  
+    const extension = getResponsiveExtension();
+    const extendedStartX = imageStartX - extension;
+    const extendedEndX = imageEndX + extension;
+    
+    // Calculate extended gap boundaries as percentages
+    const leftGapPercentage = (extendedStartX / wrapperWidth) * 100;
+    const rightGapPercentage = (extendedEndX / wrapperWidth) * 100;
+    
+    // Convert slider position (0-100% of gap range) to wrapper percentage
+    const gapRangePercentage = leftGapPercentage + (sliderPosition / 100) * (rightGapPercentage - leftGapPercentage);
+    
+    // Convert wrapper percentage to image-relative percentage
+    const wrapperPixelPosition = (gapRangePercentage / 100) * wrapperWidth;
+    const imagePixelPosition = wrapperPixelPosition - imageStartX;
+    const imageRelativePercentage = (imagePixelPosition / imageWidth) * 100;
+    
+    return imageRelativePercentage;
+  }, [sliderPosition, getResponsiveExtension]);
+
+  // Convert gap-relative position to container-relative position for visual elements
+  const getContainerRelativePosition = useCallback(() => {
+    if (!containerRef.current) return sliderPosition;
+    
+    const sliderWrapper = containerRef.current.parentElement;
+    if (!sliderWrapper) return sliderPosition;
+    
+    const wrapperRect = sliderWrapper.getBoundingClientRect();
+    const containerRect = containerRef.current.getBoundingClientRect();
+    
+    // Calculate boundaries
+    const imageStartX = containerRect.left - wrapperRect.left;
+    const imageEndX = containerRect.right - wrapperRect.left;
+    const imageWidth = containerRect.width;
+    const wrapperWidth = wrapperRect.width;
+    
+    // Extend boundaries by responsive amount beyond image edges  
+    const extension = getResponsiveExtension();
+    const extendedStartX = imageStartX - extension;
+    const extendedEndX = imageEndX + extension;
+    
+    // Calculate extended gap boundaries as percentages
+    const leftGapPercentage = (extendedStartX / wrapperWidth) * 100;
+    const rightGapPercentage = (extendedEndX / wrapperWidth) * 100;
+    
+    // Convert slider position (0-100% of gap range) to wrapper percentage
+    const gapRangePercentage = leftGapPercentage + (sliderPosition / 100) * (rightGapPercentage - leftGapPercentage);
+    
+    // Convert wrapper percentage to container-relative percentage
+    const wrapperPixelPosition = (gapRangePercentage / 100) * wrapperWidth;
+    const containerPixelPosition = wrapperPixelPosition - imageStartX;
+    const containerRelativePercentage = (containerPixelPosition / imageWidth) * 100;
+    
+          return containerRelativePercentage;
+    }, [sliderPosition, getResponsiveExtension]);
+
+    const updateSliderPosition = useCallback((clientX: number) => {
+    if (!containerRef.current) return;
+    
+    const sliderWrapper = containerRef.current.parentElement;
+    if (!sliderWrapper) return;
+    
+    const wrapperRect = sliderWrapper.getBoundingClientRect();
+    const containerRect = containerRef.current.getBoundingClientRect();
+    
+    // Calculate the position relative to the entire wrapper (including labels)
+    const x = clientX - wrapperRect.left;
+    
+    // Calculate the actual gap boundaries
+    const imageStartX = containerRect.left - wrapperRect.left;
+    const imageEndX = containerRect.right - wrapperRect.left;
+    const totalWrapperWidth = wrapperRect.width;
+    
+    // Extend boundaries by responsive amount beyond image edges
+    const extension = getResponsiveExtension();
+    const extendedStartX = imageStartX - extension;
+    const extendedEndX = imageEndX + extension;
+    
+    // Define the extended gap boundaries as percentages of wrapper width
+    const leftGapPercentage = (extendedStartX / totalWrapperWidth) * 100;
+    const rightGapPercentage = (extendedEndX / totalWrapperWidth) * 100;
+    
+    // Convert mouse position to percentage
+    const mousePercentage = (x / totalWrapperWidth) * 100;
+    
+    // Constrain mouse position to only be within the gap boundaries
+    const constrainedPercentage = Math.max(leftGapPercentage, Math.min(rightGapPercentage, mousePercentage));
+    
+    // Map the constrained range to 0-100% for our slider
+    const normalizedPercentage = ((constrainedPercentage - leftGapPercentage) / (rightGapPercentage - leftGapPercentage)) * 100;
+    
+    setSliderPosition(Math.max(0, Math.min(100, normalizedPercentage)));
+  }, [getResponsiveExtension]);
+
+  const handleStart = useCallback((clientX: number) => {
+    setIsDragging(true);
+    updateSliderPosition(clientX);
+  }, [updateSliderPosition]);
+
+  const handleMove = useCallback((clientX: number) => {
+    if (!isDragging) return;
+    updateSliderPosition(clientX);
+  }, [isDragging, updateSliderPosition]);
+
+  const handleEnd = useCallback(() => {
+    setIsDragging(false);
+  }, []);
+
+  // Mouse events
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    handleStart(e.clientX);
+  }, [handleStart]);
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
-    if (!isDragging || !containerRef.current) return;
-    
-    const rect = containerRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
-    setSliderPosition(percentage);
-  }, [isDragging]);
+    handleMove(e.clientX);
+  }, [handleMove]);
 
   const handleMouseUp = useCallback(() => {
-    setIsDragging(false);
-  }, []);
+    handleEnd();
+  }, [handleEnd]);
 
-  const handleTouchStart = useCallback(() => {
-    setIsDragging(true);
-  }, []);
+  // Touch events
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    e.preventDefault();
+    if (e.touches[0]) {
+      handleStart(e.touches[0].clientX);
+    }
+  }, [handleStart]);
 
   const handleTouchMove = useCallback((e: TouchEvent) => {
-    if (!isDragging || !containerRef.current) return;
-    
-    e.preventDefault(); // Prevent scrolling while dragging
-    const rect = containerRef.current.getBoundingClientRect();
-    const x = e.touches[0].clientX - rect.left;
-    const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
-    setSliderPosition(percentage);
-  }, [isDragging]);
+    e.preventDefault();
+    if (isDragging && e.touches[0]) {
+      handleMove(e.touches[0].clientX);
+    }
+  }, [isDragging, handleMove]);
 
-  const handleTouchEnd = useCallback(() => {
-    setIsDragging(false);
-  }, []);
+  const handleTouchEnd = useCallback((e: TouchEvent) => {
+    e.preventDefault();
+    handleEnd();
+  }, [handleEnd]);
 
   React.useEffect(() => {
     if (isDragging) {
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
-      document.addEventListener('touchmove', handleTouchMove);
-      document.addEventListener('touchend', handleTouchEnd);
+      document.addEventListener('touchmove', handleTouchMove, { passive: false });
+      document.addEventListener('touchend', handleTouchEnd, { passive: false });
       
       return () => {
         document.removeEventListener('mousemove', handleMouseMove);
@@ -367,13 +488,15 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({
   }, [isDragging, handleMouseMove, handleMouseUp, handleTouchMove, handleTouchEnd]);
 
   const handleContainerClick = useCallback((e: React.MouseEvent) => {
-    if (!containerRef.current) return;
-    
-    const rect = containerRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
-    setSliderPosition(percentage);
-  }, []);
+    if (isDragging) return;
+    updateSliderPosition(e.clientX);
+  }, [isDragging, updateSliderPosition]);
+
+  const handleContainerTouch = useCallback((e: React.TouchEvent) => {
+    if (e.touches[0] && !isDragging) {
+      updateSliderPosition(e.touches[0].clientX);
+    }
+  }, [isDragging, updateSliderPosition]);
 
   return (
     <SliderWrapper>
@@ -381,17 +504,21 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({
         <LabelTitle>{beforeLabel}</LabelTitle>
       </SideLabel>
       
-      <SliderContainer ref={containerRef} onClick={handleContainerClick}>
+      <SliderContainer 
+        ref={containerRef} 
+        onClick={handleContainerClick}
+        onTouchStart={handleContainerTouch}
+      >
         <ImageWrapper>
           <BeforeImage src={beforeImage} alt="Before" draggable={false} />
         </ImageWrapper>
         
-        <AfterImageContainer clipWidth={sliderPosition}>
+        <AfterImageContainer clipWidth={getImageClipPosition()}>
           <AfterImage src={afterImage} alt="After" draggable={false} />
         </AfterImageContainer>
         
         <DividerLine
-          position={sliderPosition}
+          position={getContainerRelativePosition()}
           onMouseDown={handleMouseDown}
           onTouchStart={handleTouchStart}
           whileHover={{ scale: 1.05 }}
@@ -399,7 +526,7 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({
         />
         
         <DragHandle
-          position={sliderPosition}
+          position={getContainerRelativePosition()}
           onMouseDown={handleMouseDown}
           onTouchStart={handleTouchStart}
           whileHover={{ scale: 1.1 }}

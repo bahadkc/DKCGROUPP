@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { motion, useScroll, useSpring } from 'framer-motion';
+import { motion } from 'framer-motion';
 import styled from 'styled-components';
 import BeforeAfterSlider from './BeforeAfterSlider';
 
@@ -364,13 +364,7 @@ const SectionDescription = styled.p`
   }
 `;
 
-interface Section {
-  id: string;
-  name: string;
-  element: React.RefObject<HTMLDivElement | null>;
-  thumbnail?: string;
-  bgColor?: string;
-}
+
 
 interface MinimapSection {
   id: string;
@@ -384,7 +378,6 @@ interface MinimapSection {
 const ScrollIndicator: React.FC<{ project: Project; containerRef: React.RefObject<HTMLDivElement | null> }> = ({ project, containerRef }) => {
   const [scrollPosition, setScrollPosition] = useState(0);
   const [viewportHeight, setViewportHeight] = useState(20);
-  const [totalHeight, setTotalHeight] = useState(0);
 
   // Calculate actual section heights based on real content
   const getActualSectionHeights = (): MinimapSection[] => {
@@ -478,7 +471,6 @@ const ScrollIndicator: React.FC<{ project: Project; containerRef: React.RefObjec
       
       setScrollPosition(scrollPercentage);
       setViewportHeight(Math.min(viewportPercentage, 100));
-      setTotalHeight(scrollHeight);
     };
 
     container.addEventListener('scroll', updateScrollMetrics);
@@ -586,7 +578,6 @@ const ProjectDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const project = getProjectData(id || "1");
   const [showScroll, setShowScroll] = useState(false);
-  const [isAtTop, setIsAtTop] = useState(true);
   const navigate = useNavigate();
 
   const heroRef = useRef<HTMLDivElement>(null);
@@ -605,7 +596,6 @@ const ProjectDetails: React.FC = () => {
       const scrollY = container.scrollTop;
       const shouldShow = scrollY > heroHeight * 0.5; // Show at 50% of hero height
       setShowScroll(shouldShow);
-      setIsAtTop(scrollY < window.innerHeight * 0.3);
       console.log('Scroll Y:', scrollY, 'Hero Height:', heroHeight, 'Should show:', shouldShow);
     };
 
